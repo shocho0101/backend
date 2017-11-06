@@ -65,3 +65,7 @@ class Account(AbstractBaseUser):
     def is_staff(self):
         return  self.is_admin
 
+class Group(models.Model):
+    name = models.CharField(max_length=255)
+    member = models.ManyToManyField(Account, related_name= "Groups")
+    joincode = models.CharField(max_length= 255)
