@@ -11,7 +11,7 @@ from django_filters import filters
 from rest_framework import status, viewsets, filters
 from rest_framework.views import APIView
 
-from .serializer import AccountSerializer, GroupListSerializer
+from .serializer import AccountSerializer, GroupListSerializer, GroupDetailSerializer
 from .models import Account, AccountManager, Group
 # Create your views here.
 
@@ -33,7 +33,13 @@ class GroupList(generics.ListAPIView):
     permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request, *args, **kwargs):
-        queryset = self.get_queryset()
+        queryset = self.get_queryset().filter(member = request.user.id)
         serializer = GroupListSerializer(queryset, many= True)
+        return Response(serializer.data)
+
+class GroupDetail(APIView):
+    def get(self, request, id):
+        group = Group.objects.get(id = id)
+        serializer = GroupDetailSerializer(group)
         return Response(serializer.data)
 

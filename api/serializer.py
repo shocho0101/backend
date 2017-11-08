@@ -17,3 +17,15 @@ class GroupListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
         fields = ("id", "name")
+
+class MemberSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Account
+        fields = ("userID", "username")
+
+class GroupDetailSerializer(serializers.ModelSerializer):
+    member = MemberSerializer(many= True)
+
+    class Meta:
+        model = Group
+        fields = ("name", "id", "joincode", "member")
