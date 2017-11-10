@@ -11,8 +11,10 @@ from django_filters import filters
 from rest_framework import status, viewsets, filters
 from rest_framework.views import APIView
 
-from .serializer import AccountSerializer, GroupListSerializer, GroupDetailSerializer
+from .serializer import AccountSerializer, GroupListSerializer, GroupDetailSerializer, AddMemberSerializer, CreateGroupSerializer
 from .models import Account, AccountManager, Group
+
+import random
 # Create your views here.
 
 class AuthRegister(generics.CreateAPIView):
@@ -42,4 +44,31 @@ class GroupDetail(APIView):
         group = Group.objects.get(id = id)
         serializer = GroupDetailSerializer(group)
         return Response(serializer.data)
+
+class AddMember(APIView):
+    def put(self, request):
+        serializer = AddMemberSerializer(data=request.data)
+        if serializer.is_valid():
+            group = Group.objects.get(joincode= serializer.validated_data.get("joincode"))
+            group.member.add(request.user.id)
+            groupDetailSerializer = GroupDetailSerializer(group)
+            return Response(groupDetailSerializer.data)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class CreateGroup(APIView):
+    def post(self, request):
+        serializer = CreateGroupSerializer(data= request.data)
+        if serializer.is_valid():
+            group = Group(name=serializer.validated_data.get("name"))
+            group.save()
+            group.member.add(request.user.id)
+            number = random.randint(1,999999999999999999999999)
+            group.joincode = str(group.id) + "/" + str(number)
+            group.save()
+            groupDetailSerializer = GroupDetailSerializer(group)
+            return Response(groupDetailSerializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 

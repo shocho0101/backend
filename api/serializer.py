@@ -29,3 +29,10 @@ class GroupDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
         fields = ("name", "id", "joincode", "member")
+
+class AddMemberSerializer(serializers.Serializer):
+    joincode = serializers.CharField(max_length=255)
+
+class CreateGroupSerializer(serializers.Serializer):
+    name = serializers.CharField(max_length=255)
+
