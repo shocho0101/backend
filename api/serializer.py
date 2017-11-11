@@ -41,5 +41,5 @@ class HomeworkListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Homework
-        fields = ("id", "group", "deadline")
+        fields = ("id", "group", "deadline", "name")
 
