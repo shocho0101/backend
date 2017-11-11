@@ -11,8 +11,8 @@ from django_filters import filters
 from rest_framework import status, viewsets, filters
 from rest_framework.views import APIView
 
-from .serializer import AccountSerializer, GroupListSerializer, GroupDetailSerializer, AddMemberSerializer, CreateGroupSerializer
-from .models import Account, AccountManager, Group
+from .serializer import AccountSerializer, GroupListSerializer, GroupDetailSerializer, AddMemberSerializer, CreateGroupSerializer, HomeworkListSerializer
+from .models import Account, AccountManager, Group, Homework
 
 import random
 # Create your views here.
@@ -71,4 +71,15 @@ class CreateGroup(APIView):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+class HomeworkList(APIView):
+    def get(self, request, id):
+        if id == "0":
+            groups = Group.objects.filter(member= request.user.id)
+            homeworks = Homework.objects.filter(group=groups.all())
+            serializer = HomeworkListSerializer(homeworks, many=True)
+            return Response(serializer.data)
+        else:
+            homeworks = Group.objects.get(id = id).homeworks
+            serializer = HomeworkListSerializer(homeworks, many= True)
+            return Response(serializer.data)
 

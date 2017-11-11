@@ -1,5 +1,5 @@
 from django.conf.urls import url
-from .views import AuthRegister, GroupList, GroupDetail, AddMember, CreateGroup
+from .views import AuthRegister, GroupList, GroupDetail, AddMember, CreateGroup, HomeworkList
 from rest_framework_jwt.views import obtain_jwt_token
 
 urlpatterns = [
@@ -8,5 +8,7 @@ urlpatterns = [
     url(r'^grouplist/$',GroupList.as_view()),
     url(r'^groupdetail/(?P<id>[0-9]+)/$', GroupDetail.as_view()),
     url(r'^addmember/$',AddMember.as_view()),
-    url(r'^creategroup/$',CreateGroup.as_view())
+    url(r'^creategroup/$',CreateGroup.as_view()),
+    url(r'^homeworklist/(?P<id>[0-9]+)/$', HomeworkList.as_view())
+
 ]

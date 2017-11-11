@@ -69,3 +69,8 @@ class Group(models.Model):
     name = models.CharField(max_length=255)
     member = models.ManyToManyField(Account, related_name= "Groups")
     joincode = models.CharField(max_length= 255)
+
+class Homework(models.Model):
+    name = models.CharField(max_length=255)
+    deadline = models.DateField()
+    group = models.ForeignKey(Group, related_name="homeworks")
